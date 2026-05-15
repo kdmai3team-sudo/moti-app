@@ -173,8 +173,47 @@
     transition:color 0.2s;
   }
   .tab.active{color:var(--yellow)}
-  .tab-icon{font-size:22px;line-height:1;filter:grayscale(1) brightness(0.7)}
-  .tab.active .tab-icon{filter:none}
+  .tab-icon{
+    width:26px;
+    height:26px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+  .tab-icon img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    z-index:2;
+    transition:filter 0.2s, opacity 0.2s;
+  }
+  .tab-icon-fallback{
+    font-size:22px;
+    line-height:1;
+    z-index:1;
+    transition:filter 0.2s, opacity 0.2s;
+  }
+  .tab-icon.has-image .tab-icon-fallback{display:none}
+  .tab:not(.active) .tab-icon img{
+    filter:grayscale(0.85) brightness(0.55);
+    opacity:0.6;
+  }
+  .tab.active .tab-icon img{
+    filter:none;
+    opacity:1;
+  }
+  .tab:not(.active) .tab-icon-fallback{
+    filter:grayscale(1) brightness(0.7);
+    opacity:0.7;
+  }
+  .tab.active .tab-icon-fallback{
+    filter:none;
+    opacity:1;
+  }
   .tab-label{font-size:10px;font-weight:700;letter-spacing:0.2px}
 
   /* ===== Page 1: Order ===== */
@@ -555,6 +594,27 @@
     inset:2px;
     background:#0E0E0B;
     border-radius:50%;
+  }
+
+  /* End - target marker fixed at path end (260, 55) */
+  .map-end{
+    position:absolute;
+    left:260px;top:55px;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:transparent;
+    border:2px solid #FFFF52;
+    transform:translate(-50%,-50%);
+    z-index:2;
+    box-shadow:0 0 18px rgba(255,255,82,0.6), inset 0 0 4px rgba(255,255,82,0.35);
+  }
+  .map-end::after{
+    content:'';
+    position:absolute;
+    inset:3px;
+    background:#FFFF52;
+    border-radius:50%;
+    box-shadow:0 0 8px rgba(255,255,82,0.9);
   }
 
   /* Moving group: pin + pulse, follows route via offset-path */
@@ -1698,8 +1758,10 @@
                 <path class="route-line" id="route-path" d="M 32 184 L 32 110 L 150 110 L 150 55 L 260 55"/>
               </svg>
 
-              <!-- Start: simple yellow ring -->
+              <!-- Start: yellow ring -->
               <div class="map-start" aria-label="출발 · 1F 로비"></div>
+              <!-- End: target marker fixed at path end -->
+              <div class="map-end" aria-label="도착 · 12F 내 자리"></div>
 
               <!-- Moving group: pin + pulse, follows route via offset-path -->
               <div class="map-moving" aria-label="현재 로봇 위치">
@@ -1915,15 +1977,30 @@
     <!-- Tab Bar -->
     <div class="tab-bar">
       <div class="tab active" data-page="page-order">
-        <div class="tab-icon">🍱</div>
+        <div class="tab-icon">
+          <img src="assets/nav-order.png" alt=""
+               onload="this.parentElement.classList.add('has-image')"
+               onerror="this.style.display='none'">
+          <span class="tab-icon-fallback">🍱</span>
+        </div>
         <div class="tab-label">주문</div>
       </div>
       <div class="tab" data-page="page-delivery">
-        <div class="tab-icon">🤖</div>
+        <div class="tab-icon">
+          <img src="assets/nav-delivery.png" alt=""
+               onload="this.parentElement.classList.add('has-image')"
+               onerror="this.style.display='none'">
+          <span class="tab-icon-fallback">🤖</span>
+        </div>
         <div class="tab-label">배달</div>
       </div>
       <div class="tab" data-page="page-collect">
-        <div class="tab-icon">💛</div>
+        <div class="tab-icon">
+          <img src="assets/nav-collection.png" alt=""
+               onload="this.parentElement.classList.add('has-image')"
+               onerror="this.style.display='none'">
+          <span class="tab-icon-fallback">💛</span>
+        </div>
         <div class="tab-label">수거·후기</div>
       </div>
     </div>
