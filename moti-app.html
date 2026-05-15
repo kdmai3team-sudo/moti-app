@@ -1651,6 +1651,101 @@
   /* Hide tab bar on review depth-2 */
   .tab-bar.is-hidden{display:none}
 
+  /* ===== Splash / Intro Screen ===== */
+  .splash-overlay{
+    position:absolute;
+    inset:0;
+    background:#111111;
+    z-index:500;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    opacity:1;
+    transition:opacity 0.7s ease-out;
+    overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .splash-overlay::before{
+    content:'';
+    position:absolute;
+    width:320px;height:320px;
+    background:var(--yellow);
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:0.12;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    animation:splashAura 4s ease-in-out infinite;
+  }
+  @keyframes splashAura{
+    0%,100%{opacity:0.10;transform:translate(-50%,-50%) scale(0.95)}
+    50%{opacity:0.20;transform:translate(-50%,-50%) scale(1.05)}
+  }
+  .splash-overlay.fade-out{
+    opacity:0;
+    pointer-events:none;
+  }
+  .splash-overlay.is-gone{display:none}
+  .splash-content{
+    text-align:center;
+    position:relative;
+    animation:splashRise 0.9s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  @keyframes splashRise{
+    from{opacity:0;transform:translateY(18px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .splash-logo{
+    height:54px;
+    width:auto;
+    display:block;
+    margin:0 auto;
+    animation:splashGlow 2.6s ease-in-out infinite;
+  }
+  .splash-logo.is-hidden{display:none}
+  @keyframes splashGlow{
+    0%,100%{filter:drop-shadow(0 0 18px rgba(255,255,82,0.35))}
+    50%{filter:drop-shadow(0 0 36px rgba(255,255,82,0.65))}
+  }
+  .splash-logo-fallback{
+    font-size:56px;
+    font-weight:900;
+    color:var(--yellow);
+    letter-spacing:-2px;
+    line-height:1;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    margin:0 auto;
+    animation:splashGlow 2.6s ease-in-out infinite;
+  }
+  .splash-logo-fallback sup{font-size:24px;margin-left:4px;margin-top:6px}
+  .splash-tagline{
+    margin-top:20px;
+    font-size:13px;
+    color:var(--text-3);
+    font-weight:500;
+    letter-spacing:0.6px;
+    opacity:0.9;
+  }
+  .splash-hint{
+    position:absolute;
+    bottom:54px;
+    left:0;right:0;
+    text-align:center;
+    font-size:11px;
+    color:var(--text-4);
+    font-weight:500;
+    letter-spacing:0.4px;
+    animation:hintBlink 2.2s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes hintBlink{
+    0%,100%{opacity:0.4}
+    50%{opacity:1}
+  }
+
   .hidden{display:none !important}
 
   .hint{
@@ -2085,12 +2180,42 @@
       </div>
     </div>
 
+    <!-- Splash / Intro Screen (top-most, dismissed on tap or after 2.8s) -->
+    <div class="splash-overlay" id="splash-overlay" role="button" tabindex="0" aria-label="앱 시작">
+      <div class="splash-content">
+        <img src="assets/moti-logo.png" alt="MOTI" class="splash-logo"
+             onerror="this.classList.add('is-hidden');this.insertAdjacentHTML('afterend','<div class=&quot;splash-logo-fallback&quot;>MOTI<sup>°</sup></div>');">
+        <div class="splash-tagline">따뜻한 위로 배달</div>
+      </div>
+      <div class="splash-hint">화면을 터치해 시작하기</div>
+    </div>
+
   </div>
 </div>
 
 <div class="hint">탭 바로 화면 전환 · 주문하기 버튼으로 전체 플로우 체험</div>
 
 <script>
+  // ===== Splash / Intro screen =====
+  (function initSplash(){
+    const splash=document.getElementById('splash-overlay');
+    if(!splash) return;
+    let dismissed=false;
+    function dismiss(){
+      if(dismissed) return;
+      dismissed=true;
+      splash.classList.add('fade-out');
+      // After CSS transition completes (700ms), remove from layout entirely
+      setTimeout(()=>splash.classList.add('is-gone'),800);
+    }
+    splash.addEventListener('click',dismiss);
+    splash.addEventListener('keydown',(e)=>{
+      if(e.key==='Enter'||e.key===' ') dismiss();
+    });
+    // Auto-dismiss after 2.8s if user doesn't tap
+    setTimeout(dismiss,2800);
+  })();
+
   document.querySelectorAll('.tab').forEach(tab=>{
     tab.addEventListener('click',()=>switchPage(tab.dataset.page));
   });
