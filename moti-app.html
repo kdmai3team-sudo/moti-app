@@ -1669,18 +1669,18 @@
   .splash-overlay::before{
     content:'';
     position:absolute;
-    width:320px;height:320px;
+    width:220px;height:220px;
     background:var(--yellow);
     border-radius:50%;
-    filter:blur(120px);
-    opacity:0.12;
+    filter:blur(90px);
+    opacity:0.06;
     top:50%;left:50%;
     transform:translate(-50%,-50%);
     animation:splashAura 4s ease-in-out infinite;
   }
   @keyframes splashAura{
-    0%,100%{opacity:0.10;transform:translate(-50%,-50%) scale(0.95)}
-    50%{opacity:0.20;transform:translate(-50%,-50%) scale(1.05)}
+    0%,100%{opacity:0.05;transform:translate(-50%,-50%) scale(0.95)}
+    50%{opacity:0.09;transform:translate(-50%,-50%) scale(1.05)}
   }
   .splash-overlay.fade-out{
     opacity:0;
@@ -1705,8 +1705,8 @@
   }
   .splash-logo.is-hidden{display:none}
   @keyframes splashGlow{
-    0%,100%{filter:drop-shadow(0 0 18px rgba(255,255,82,0.35))}
-    50%{filter:drop-shadow(0 0 36px rgba(255,255,82,0.65))}
+    0%,100%{filter:drop-shadow(0 0 8px rgba(255,255,82,0.18))}
+    50%{filter:drop-shadow(0 0 16px rgba(255,255,82,0.3))}
   }
   .splash-logo-fallback{
     font-size:56px;
@@ -1721,14 +1721,6 @@
     animation:splashGlow 2.6s ease-in-out infinite;
   }
   .splash-logo-fallback sup{font-size:24px;margin-left:4px;margin-top:6px}
-  .splash-tagline{
-    margin-top:20px;
-    font-size:13px;
-    color:var(--text-3);
-    font-weight:500;
-    letter-spacing:0.6px;
-    opacity:0.9;
-  }
   .splash-hint{
     position:absolute;
     bottom:54px;
@@ -2185,7 +2177,6 @@
       <div class="splash-content">
         <img src="assets/moti-logo.png" alt="MOTI" class="splash-logo"
              onerror="this.classList.add('is-hidden');this.insertAdjacentHTML('afterend','<div class=&quot;splash-logo-fallback&quot;>MOTI<sup>°</sup></div>');">
-        <div class="splash-tagline">따뜻한 위로 배달</div>
       </div>
       <div class="splash-hint">화면을 터치해 시작하기</div>
     </div>
