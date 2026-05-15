@@ -26,10 +26,16 @@ MOTI 앱에서 사용하는 이미지 자산을 이 폴더에 넣어주세요.
                            ※ 인라인 hand+heart SVG가 기본 제공됨
 
 [하단 네비게이션 바]
-  - nav-order.png       : 주문 탭 아이콘
-  - nav-delivery.png    : 배달 탭 아이콘
-  - nav-collection.png  : 수거·후기 탭 아이콘
+  - nav-order.png              : 주문 탭 기본(아웃라인) 아이콘
+  - nav-delivery.png           : 배달 탭 기본 아이콘
+  - nav-collection.png         : 수거·후기 탭 기본 아이콘
+  - nav-order-active.png       : (선택) 주문 탭이 선택됐을 때 보일 채워진(filled) 아이콘
+  - nav-delivery-active.png    : (선택) 배달 탭 선택 시 채워진 아이콘
+  - nav-collection-active.png  : (선택) 수거·후기 탭 선택 시 채워진 아이콘
+
+  ※ 기본 아이콘만 있으면 그대로 표시되고, -active.png 파일이 존재하면
+     자동 감지되어 해당 탭이 선택됐을 때 채워진 버전으로 교체됩니다.
+     (예: 아웃라인 하트 → 활성 시 풀필 하트)
   ※ 모두 화면 표시 크기 26x26, 1:1 정사각형 비율
   ※ 고해상도 대응 권장 사이즈: 72x72 ~ 144x144 (PNG, 투명 배경)
-  ※ 비활성 탭은 자동으로 grayscale + 흐림 처리,
-     활성 탭은 풀컬러로 또렷하게 표시됩니다.
+  ※ 활성 텍스트 컬러는 #FFFFFF (흰색)

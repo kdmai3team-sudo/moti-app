@@ -172,7 +172,7 @@
     color:var(--text-4);
     transition:color 0.2s;
   }
-  .tab.active{color:var(--yellow)}
+  .tab.active{color:#FFFFFF}
   .tab-icon{
     width:26px;
     height:26px;
@@ -1979,6 +1979,8 @@
       <div class="tab active" data-page="page-order">
         <div class="tab-icon">
           <img src="assets/nav-order.png" alt=""
+               data-src-default="assets/nav-order.png"
+               data-src-active="assets/nav-order-active.png"
                onload="this.parentElement.classList.add('has-image')"
                onerror="this.style.display='none'">
           <span class="tab-icon-fallback">🍱</span>
@@ -1988,6 +1990,8 @@
       <div class="tab" data-page="page-delivery">
         <div class="tab-icon">
           <img src="assets/nav-delivery.png" alt=""
+               data-src-default="assets/nav-delivery.png"
+               data-src-active="assets/nav-delivery-active.png"
                onload="this.parentElement.classList.add('has-image')"
                onerror="this.style.display='none'">
           <span class="tab-icon-fallback">🤖</span>
@@ -1997,6 +2001,8 @@
       <div class="tab" data-page="page-collect">
         <div class="tab-icon">
           <img src="assets/nav-collection.png" alt=""
+               data-src-default="assets/nav-collection.png"
+               data-src-active="assets/nav-collection-active.png"
                onload="this.parentElement.classList.add('has-image')"
                onerror="this.style.display='none'">
           <span class="tab-icon-fallback">💛</span>
@@ -2069,6 +2075,30 @@
   };
   const HIDE_TAB_ON=['page-review'];
 
+  // Preload optional -active.png variants. If a file exists,
+  // the icon will auto-swap to its filled version when the tab is active.
+  const tabActiveVariants=new Map();
+  document.querySelectorAll('.tab .tab-icon img[data-src-active]').forEach(img=>{
+    const activeSrc=img.dataset.srcActive;
+    const probe=new Image();
+    probe.onload=()=>{
+      tabActiveVariants.set(img,activeSrc);
+      if(img.closest('.tab').classList.contains('active')){
+        img.src=activeSrc;
+      }
+    };
+    probe.src=activeSrc;
+  });
+  function applyTabIconState(){
+    document.querySelectorAll('.tab .tab-icon img[data-src-active]').forEach(img=>{
+      const activeSrc=tabActiveVariants.get(img);
+      if(!activeSrc) return;
+      const defaultSrc=img.dataset.srcDefault;
+      const target=img.closest('.tab').classList.contains('active')?activeSrc:defaultSrc;
+      if(img.getAttribute('src')!==target) img.setAttribute('src',target);
+    });
+  }
+
   function switchPage(pageId){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -2078,6 +2108,7 @@
     if(activeTab) activeTab.classList.add('active');
     const tabBar=document.querySelector('.tab-bar');
     tabBar.classList.toggle('is-hidden', HIDE_TAB_ON.includes(pageId));
+    applyTabIconState();
   }
 
   function goToReview(){switchPage('page-review')}
