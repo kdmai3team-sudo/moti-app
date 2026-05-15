@@ -461,13 +461,17 @@
   .order-code-pill{
     background:var(--yellow-dim);
     color:var(--yellow);
-    padding:8px 13px;
+    padding:7px 12px;
     border-radius:100px;
-    font-size:11px;
+    font-size:10px;
     font-weight:800;
-    letter-spacing:0.5px;
+    letter-spacing:0.4px;
     border:1px solid rgba(255,255,82,0.2);
+    white-space:nowrap;
+    flex-shrink:0;
   }
+  .delivery-header{align-items:flex-start;gap:10px}
+  .delivery-header > div:first-child{min-width:0;flex:1}
 
   /* Live map / route view */
   .map-wrap{
@@ -524,30 +528,29 @@
     border:3px solid #111;
     box-shadow:0 0 0 2px var(--yellow), 0 0 30px var(--yellow-glow);
   }
-  .map-robot{
+  .map-pin{
     position:absolute;
-    left:46%;top:46%;
-    width:46px;height:46px;
-    background:var(--yellow);
-    border-radius:14px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:24px;
+    left:48%;top:48%;
+    width:40px;height:48px;
     z-index:3;
-    box-shadow:0 8px 24px var(--yellow-glow);
-    animation:robotFloat 2.4s infinite ease-in-out;
+    transform:translate(-50%,-90%);
+    filter:drop-shadow(0 10px 20px var(--yellow-glow));
+    animation:pinFloat 2.4s infinite ease-in-out;
   }
-  .map-robot::before{
+  .map-pin svg{width:100%;height:100%;display:block}
+  .map-pin::after{
     content:'';
     position:absolute;
-    inset:-12px;
+    left:50%;bottom:-2px;
+    transform:translateX(-50%);
+    width:18px;height:6px;
+    background:radial-gradient(ellipse, var(--yellow-glow) 0%, transparent 70%);
     border-radius:50%;
-    background:radial-gradient(circle, var(--yellow-glow) 0%, transparent 70%);
-    z-index:-1;
     animation:pulse 2s infinite;
   }
-  @keyframes robotFloat{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-4px)}
+  @keyframes pinFloat{
+    0%,100%{transform:translate(-50%,-90%)}
+    50%{transform:translate(-50%,-95%)}
   }
   .map-overlay{
     position:absolute;
@@ -607,39 +610,50 @@
     width:1px;height:32px;background:var(--line);
   }
 
-  /* Live status banner inside building */
+  /* Live status banner (top) */
   .status-banner{
-    margin-top:14px;
+    margin-top:20px;
     background:linear-gradient(135deg, #1F1A0E 0%, #2A220E 100%);
     border:1px solid rgba(255,255,82,0.2);
     border-radius:24px;
     padding:22px;
     position:relative;
     overflow:hidden;
-    min-height:120px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    min-height:140px;
   }
   .status-banner::before{
     content:'';
     position:absolute;
-    width:180px;height:180px;
+    width:200px;height:200px;
     background:var(--yellow);
     border-radius:50%;
-    filter:blur(80px);
-    opacity:0.2;
-    top:-60px;right:-60px;
+    filter:blur(90px);
+    opacity:0.22;
+    top:-70px;right:-70px;
   }
-  .robot-art{
-    position:absolute;
-    right:14px;
-    bottom:-6px;
-    font-size:80px;
-    line-height:1;
-    animation:bob 2.2s infinite ease-in-out;
-    filter:drop-shadow(0 6px 20px rgba(255,255,82,0.35));
+  .status-text-wrap{
+    flex:1;
+    position:relative;
+    min-width:0;
   }
-  @keyframes bob{
-    0%,100%{transform:translateY(0) rotate(-2deg)}
-    50%{transform:translateY(-8px) rotate(2deg)}
+  .status-image-slot{
+    width:96px;
+    height:96px;
+    border-radius:22px;
+    background:rgba(0,0,0,0.28);
+    border:1.5px dashed rgba(255,255,82,0.28);
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
+  }
+  .status-image-slot img{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
   }
   .status-eyebrow{
     font-size:10px;
@@ -649,9 +663,9 @@
   }
   .status-main{
     font-size:22px;
-    font-weight:800;
+    font-weight:600;
     color:var(--text);
-    margin-top:8px;
+    margin-top:10px;
     line-height:1.3;
     letter-spacing:-0.5px;
     max-width:220px;
@@ -665,7 +679,7 @@
     border-radius:100px;
     display:inline-block;
     font-size:12px;
-    font-weight:800;
+    font-weight:700;
     color:var(--yellow);
     border:1px solid rgba(255,255,82,0.25);
   }
@@ -710,67 +724,70 @@
     50%{opacity:0.3}
   }
 
-  .floors{
-    margin-top:14px;
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-  }
-  .floor{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:6px 0;
+  /* Vertical building path timeline */
+  .path-list{
+    margin-top:18px;
     position:relative;
+    padding-left:28px;
   }
-  .floor-num{
+  .path-list::before{
+    content:'';
+    position:absolute;
+    left:9px;top:10px;bottom:10px;
+    width:2px;
+    background:var(--line);
+  }
+  .path-item{
+    position:relative;
+    padding:6px 0 20px;
+  }
+  .path-item:last-child{padding-bottom:0}
+  .path-dot{
+    position:absolute;
+    left:-28px;top:6px;
+    width:18px;height:18px;
+    background:var(--line);
+    border:3px solid var(--card);
+    border-radius:50%;
+    box-shadow:0 0 0 2px var(--line);
+  }
+  .path-item.done .path-dot{
+    background:var(--yellow);
+    box-shadow:0 0 0 2px var(--yellow), 0 0 14px var(--yellow-glow);
+  }
+  .path-item.active .path-dot{
+    background:var(--yellow);
+    box-shadow:0 0 0 2px var(--yellow);
+    animation:pulseDot 1.5s infinite;
+  }
+  .path-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .path-title{
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+    letter-spacing:-0.2px;
+  }
+  .path-item:not(.done):not(.active) .path-title{color:var(--text-4);font-weight:600}
+  .path-floor{
     font-size:11px;
     font-weight:800;
-    color:var(--text-4);
-    width:30px;
-    text-align:center;
-  }
-  .floor-line{
-    flex:1;
-    height:40px;
-    background:var(--bg-soft);
-    border:1px solid var(--line-soft);
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    padding:0 14px;
-    font-size:12px;
     color:var(--text-3);
-    position:relative;
-    font-weight:600;
+    letter-spacing:0.5px;
   }
-  .floor.current .floor-num{color:var(--yellow);font-size:13px}
-  .floor.current .floor-line{
-    background:linear-gradient(90deg, rgba(255,255,82,0.12) 0%, rgba(255,255,82,0.04) 100%);
-    border:1px solid var(--yellow);
-    color:var(--text);
-    font-weight:700;
-    box-shadow:0 0 24px var(--yellow-dim);
+  .path-item.active .path-floor{color:var(--yellow)}
+  .path-item.done .path-floor{color:var(--yellow);opacity:0.7}
+  .path-meta{
+    font-size:11px;
+    color:var(--text-3);
+    margin-top:5px;
+    font-weight:500;
   }
-  .floor.passed .floor-num{color:var(--text-4)}
-  .floor.passed .floor-line{
-    background:rgba(255,255,255,0.02);
-    color:var(--text-4);
-    border-color:var(--line-soft);
-  }
-  .robot-marker{
-    position:absolute;
-    right:12px;
-    font-size:18px;
-    filter:drop-shadow(0 0 8px var(--yellow-glow));
-  }
-  .floor-check{
-    position:absolute;
-    right:14px;
-    color:var(--yellow);
-    font-weight:800;
-    font-size:14px;
-  }
+  .path-item.active .path-meta{color:var(--yellow)}
 
   /* Info row */
   .status-row{
@@ -785,13 +802,18 @@
     border-radius:22px;
     padding:18px;
   }
-  .info-card-icon{
+  .info-card-slot{
     width:38px;height:38px;
-    background:var(--card-warm-2);
+    background:rgba(255,255,255,0.02);
     border-radius:13px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:18px;
-    border:1px solid rgba(255,255,82,0.1);
+    border:1.5px dashed var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .info-card-slot img{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
   }
   .info-card-label{
     font-size:10px;
@@ -903,66 +925,107 @@
   }
   .timeline-item.active .timeline-time{color:var(--yellow)}
 
-  /* Arrival */
-  .arrival-banner{
-    margin-top:14px;
-    background:var(--yellow);
-    color:#111;
+  /* Arrival modal (centered popup) */
+  .arrival-modal-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(18px) saturate(1.2);
+    -webkit-backdrop-filter:blur(18px) saturate(1.2);
+    z-index:280;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s;
+  }
+  .arrival-modal-overlay.show{opacity:1;pointer-events:auto}
+  .arrival-modal-card{
+    width:100%;
+    max-width:320px;
+    background:var(--card-warm);
+    border:1px solid rgba(255,255,82,0.16);
     border-radius:28px;
-    padding:26px 22px;
+    padding:26px 22px 22px;
+    position:relative;
     text-align:center;
+    transform:scale(0.92) translateY(20px);
+    opacity:0;
+    transition:transform 0.4s cubic-bezier(0.32,0.72,0,1), opacity 0.3s;
+    box-shadow:0 30px 80px rgba(255,255,82,0.18), 0 16px 48px rgba(0,0,0,0.55);
+  }
+  .arrival-modal-overlay.show .arrival-modal-card{
+    transform:scale(1) translateY(0);
+    opacity:1;
+  }
+  .arrival-modal-close{
+    position:absolute;
+    top:14px;right:14px;
+    width:32px;height:32px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    color:var(--text-2);
+    font-size:12px;
+    cursor:pointer;
+    font-family:inherit;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .arrival-modal-image-slot{
+    width:96px;height:96px;
+    margin:6px auto 20px;
+    border-radius:28px;
+    background:rgba(255,255,82,0.05);
+    border:1.5px dashed rgba(255,255,82,0.3);
     position:relative;
     overflow:hidden;
-    cursor:pointer;
-    transition:transform 0.2s;
-    box-shadow:0 20px 50px var(--yellow-glow);
   }
-  .arrival-banner::before{
+  .arrival-modal-image-slot::before{
     content:'';
     position:absolute;
     inset:0;
-    background:radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 60%);
-    pointer-events:none;
+    background:radial-gradient(circle at center, var(--yellow-dim) 0%, transparent 70%);
   }
-  .arrival-banner:active{transform:scale(0.98)}
-  .arrival-emoji{
-    font-size:54px;
-    margin-bottom:10px;
+  .arrival-modal-image-slot img{
+    width:100%;height:100%;
+    object-fit:cover;
     display:block;
-    line-height:1;
-    animation:knock 1.5s infinite ease-in-out;
     position:relative;
   }
-  @keyframes knock{
-    0%,100%{transform:rotate(0)}
-    20%{transform:rotate(-12deg)}
-    60%{transform:rotate(12deg)}
-  }
-  .arrival-title{
-    font-size:22px;
-    font-weight:800;
+  .arrival-modal-title{
+    font-size:20px;
+    font-weight:600;
+    color:var(--text);
     letter-spacing:-0.5px;
+    line-height:1.4;
+  }
+  .arrival-modal-sub{
+    font-size:13px;
+    color:var(--text-3);
+    margin-top:10px;
+    line-height:1.6;
+    font-weight:500;
+  }
+  .arrival-modal-btn{
+    margin-top:22px;
+    background:var(--yellow);
     color:#111;
-    position:relative;
-  }
-  .arrival-sub{
-    font-size:12px;
-    color:#3A3A1A;
-    margin-top:8px;
+    border:none;
+    width:100%;
+    padding:18px;
+    border-radius:18px;
+    font-size:15px;
     font-weight:700;
-    position:relative;
+    cursor:pointer;
+    letter-spacing:-0.3px;
+    box-shadow:0 14px 32px rgba(255,255,82,0.25);
+    transition:transform 0.15s;
   }
-  .arrival-cta{
-    margin-top:14px;
-    display:inline-block;
-    background:#111;
-    color:var(--yellow);
-    padding:10px 18px;
-    border-radius:100px;
-    font-size:12px;
-    font-weight:800;
-    position:relative;
-  }
+  .arrival-modal-btn:active{transform:scale(0.985)}
 
   /* Demo switch */
   .demo-toggle{
@@ -1301,20 +1364,37 @@
               <div class="page-title">배달 중이에요</div>
               <div class="page-sub">엄마의 소고기뭇국 정식</div>
             </div>
-            <div class="order-code-pill">MOTI · 3829</div>
+            <div class="order-code-pill">MOTI · 9 DJ AI 12 E 007</div>
           </div>
 
-          <!-- Live Map / Route View -->
+          <!-- 1) Live Status Banner (TOP) -->
+          <div class="status-banner" id="status-banner">
+            <div class="status-text-wrap">
+              <div class="status-eyebrow">DELIVERY IN PROGRESS</div>
+              <div class="status-main" id="status-main">엘리베이터에<br>탑승했어요</div>
+              <div class="status-eta" id="status-eta">⏱ 약 4분 뒤 도착</div>
+            </div>
+            <div class="status-image-slot" aria-label="status image placeholder">
+              <!-- Image goes here later -->
+            </div>
+          </div>
+
+          <!-- 2) Live Map / Route View -->
           <div class="map-wrap">
             <div class="map-canvas">
               <div class="map-grid"></div>
               <div class="map-route"></div>
               <div class="map-start"></div>
               <div class="map-end"></div>
-              <div class="map-robot">🤖</div>
+              <div class="map-pin">
+                <svg viewBox="0 0 40 48" xmlns="http://www.w3.org/2000/svg" aria-label="현재 위치">
+                  <path d="M20 0C9 0 0 8.8 0 19.6C0 35 20 48 20 48C20 48 40 35 40 19.6C40 8.8 31 0 20 0Z" fill="#FFFF52"/>
+                  <circle cx="20" cy="19" r="7.5" fill="#111111"/>
+                </svg>
+              </div>
               <div class="map-overlay">
                 <span class="map-overlay-eta">⏱ 4분</span>
-                <span class="map-overlay-text">목적지까지</span>
+                <span class="map-overlay-text">남음</span>
               </div>
               <div class="map-locate">⊕</div>
             </div>
@@ -1331,94 +1411,68 @@
             </div>
           </div>
 
-          <!-- Live Status Banner -->
-          <div class="status-banner" id="status-banner">
-            <div class="status-eyebrow">DELIVERY IN PROGRESS</div>
-            <div class="status-main" id="status-main">엘리베이터에<br>탑승했어요</div>
-            <div class="status-eta" id="status-eta">⏱ 약 4분 뒤 도착</div>
-            <div class="robot-art">🤖</div>
-          </div>
-
-          <!-- Arrival banner (hidden by default) -->
-          <div class="arrival-banner hidden" id="arrival-banner" onclick="goToCollect()">
-            <span class="arrival-emoji">🚪</span>
-            <div class="arrival-title">방금 문 앞에 놓고 갑니다</div>
-            <div class="arrival-sub">노크는 조용히, 따뜻함은 그대로</div>
-            <div class="arrival-cta">받으러 가기 →</div>
-          </div>
-
-          <!-- Building Floor View -->
+          <!-- 3) Building path (vertical timeline) -->
           <div class="building-view">
             <div class="section-title">
-              <span>🏢 건물 내 이동 경로</span>
+              <span>건물 내 이동 경로</span>
               <span class="live-tag"><span class="live-dot"></span>LIVE</span>
             </div>
-            <div class="floors">
-              <div class="floor">
-                <div class="floor-num">12F</div>
-                <div class="floor-line">내 자리 (도착 예정)</div>
+            <div class="path-list">
+              <div class="path-item done">
+                <div class="path-dot"></div>
+                <div class="path-row">
+                  <div class="path-title">로비 출발</div>
+                  <div class="path-floor">1F</div>
+                </div>
+                <div class="path-meta">20:44 · 완료</div>
               </div>
-              <div class="floor current">
-                <div class="floor-num">8F</div>
-                <div class="floor-line">엘리베이터 상승 중<span class="robot-marker">🤖</span></div>
+              <div class="path-item done">
+                <div class="path-dot"></div>
+                <div class="path-row">
+                  <div class="path-title">보안 게이트 인증 완료</div>
+                  <div class="path-floor">5F</div>
+                </div>
+                <div class="path-meta">20:45 · 인증 통과</div>
               </div>
-              <div class="floor passed">
-                <div class="floor-num">5F</div>
-                <div class="floor-line">보안 게이트 인증 완료<span class="floor-check">✓</span></div>
+              <div class="path-item active">
+                <div class="path-dot"></div>
+                <div class="path-row">
+                  <div class="path-title">엘리베이터 탑승 중</div>
+                  <div class="path-floor">8F</div>
+                </div>
+                <div class="path-meta">진행 중</div>
               </div>
-              <div class="floor passed">
-                <div class="floor-num">1F</div>
-                <div class="floor-line">로비 출발<span class="floor-check">✓</span></div>
+              <div class="path-item">
+                <div class="path-dot"></div>
+                <div class="path-row">
+                  <div class="path-title">내 자리 도착 예정</div>
+                  <div class="path-floor">12F</div>
+                </div>
+                <div class="path-meta">예정 20:48</div>
               </div>
             </div>
           </div>
 
-          <!-- Info row: Temperature & Time -->
+          <!-- 4) Info row: Temperature & Time -->
           <div class="status-row">
             <div class="info-card">
-              <div class="info-card-icon">🌡️</div>
-              <div class="info-card-label">음식 온도 (보온 체임버)</div>
-              <div class="info-card-value warm">65<span class="info-card-unit">°C</span></div>
+              <div class="info-card-slot" aria-label="temperature icon placeholder"></div>
+              <div class="info-card-label">음식 온도 (보온 기능 활성화)</div>
+              <div class="info-card-value">65<span class="info-card-unit">°C</span></div>
               <div class="temp-bar"><div class="temp-bar-fill"></div></div>
               <div class="info-mini">따뜻함 유지 중</div>
             </div>
             <div class="info-card">
-              <div class="info-card-icon">⏰</div>
+              <div class="info-card-slot" aria-label="time icon placeholder"></div>
               <div class="info-card-label">도착 예정 시각</div>
               <div class="info-card-value">20:48</div>
-              <div class="info-mini" style="margin-top:18px">출발 20:42 · 약 4분 남음</div>
-            </div>
-          </div>
-
-          <!-- Timeline -->
-          <div class="timeline">
-            <div class="section-title">이동 타임라인</div>
-            <div class="timeline-list">
-              <div class="timeline-item done">
-                <div class="timeline-dot"></div>
-                <div class="timeline-title">주문 접수 · 따뜻하게 포장 완료</div>
-                <div class="timeline-time">20:42</div>
-              </div>
-              <div class="timeline-item done">
-                <div class="timeline-dot"></div>
-                <div class="timeline-title">로봇 출발 · 보온 체임버 가동</div>
-                <div class="timeline-time">20:44</div>
-              </div>
-              <div class="timeline-item active">
-                <div class="timeline-dot"></div>
-                <div class="timeline-title">엘리베이터 탑승 중</div>
-                <div class="timeline-time">20:46 · 진행 중</div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-title">사무실 도착 · 조용히 노크</div>
-                <div class="timeline-time">예정 20:48</div>
-              </div>
+              <div class="temp-bar"><div class="temp-bar-fill" style="width:65%;background:linear-gradient(90deg,#FFFFFF,#666)"></div></div>
+              <div class="info-mini">출발 20:42 · 약 4분 남음</div>
             </div>
           </div>
 
           <!-- Demo Helper -->
-          <button class="demo-toggle" onclick="toggleArrival()">[데모] 도착 알림 상태 보기 / 숨기기</button>
+          <button class="demo-toggle" onclick="openArrivalModal()">[데모] 도착 알림 팝업 띄우기</button>
         </div>
       </div>
 
@@ -1430,7 +1484,7 @@
               <div class="page-title">잘 드셨나요?</div>
               <div class="page-sub">오늘 식사 정리 & 후기</div>
             </div>
-            <div class="order-code-pill">MOTI · 3829</div>
+            <div class="order-code-pill">MOTI · 9 DJ AI 12 E 007</div>
           </div>
 
           <!-- Collect hero -->
@@ -1512,6 +1566,19 @@
       </div>
     </div>
 
+    <!-- Arrival Modal (centered popup) -->
+    <div class="arrival-modal-overlay" id="arrival-modal">
+      <div class="arrival-modal-card">
+        <button class="arrival-modal-close" onclick="closeArrivalModal()" aria-label="닫기">✕</button>
+        <div class="arrival-modal-image-slot" aria-label="arrival image placeholder">
+          <!-- Image goes here later -->
+        </div>
+        <div class="arrival-modal-title">방금 문 앞에 놓고 갑니다</div>
+        <div class="arrival-modal-sub">노크는 조용히, 따뜻함은 그대로<br>전달해 두었어요.</div>
+        <button class="arrival-modal-btn" onclick="goToCollect()">받으러 가기</button>
+      </div>
+    </div>
+
     <!-- Order Code Modal -->
     <div class="modal-overlay" id="order-modal">
       <div class="modal-sheet">
@@ -1552,23 +1619,20 @@
     setTimeout(()=>switchPage('page-delivery'),250);
   }
 
-  function toggleArrival(){
-    const banner=document.getElementById('arrival-banner');
-    const statusMain=document.getElementById('status-main');
-    const statusEta=document.getElementById('status-eta');
-    const statusBanner=document.getElementById('status-banner');
-    if(banner.classList.contains('hidden')){
-      banner.classList.remove('hidden');
-      statusMain.innerHTML='문 앞에<br>도착했어요';
-      statusEta.textContent='💛 따뜻하게 잘 드세요';
-    }else{
-      banner.classList.add('hidden');
-      statusMain.innerHTML='엘리베이터에<br>탑승했어요';
-      statusEta.textContent='⏱ 약 4분 뒤 도착';
-    }
+  function openArrivalModal(){
+    document.getElementById('arrival-modal').classList.add('show');
   }
+  function closeArrivalModal(){
+    document.getElementById('arrival-modal').classList.remove('show');
+  }
+  document.getElementById('arrival-modal').addEventListener('click',(e)=>{
+    if(e.target.id==='arrival-modal') closeArrivalModal();
+  });
 
-  function goToCollect(){switchPage('page-collect')}
+  function goToCollect(){
+    closeArrivalModal();
+    setTimeout(()=>switchPage('page-collect'),200);
+  }
 
   let currentRating=0;
   document.querySelectorAll('.star').forEach(star=>{
