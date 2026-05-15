@@ -691,16 +691,36 @@
     transition:border-color 0.3s, background 0.3s;
   }
   .status-image-slot img{
+    position:absolute;
+    inset:0;
     width:100%;height:100%;
     object-fit:cover;
     display:block;
     border-radius:inherit;
+    z-index:2;
   }
   .status-image-slot.has-image{
     border-style:solid;
     border-color:rgba(255,255,82,0.18);
     background:transparent;
   }
+
+  /* Inline SVG fallback inside icon slots */
+  .slot-svg{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:1;
+    display:block;
+    filter:drop-shadow(0 0 10px rgba(255,255,82,0.35));
+    pointer-events:none;
+  }
+  .status-image-slot .slot-svg{width:62%;height:62%}
+  .info-card-slot .slot-svg{width:70%;height:70%}
+  .review-food-image .slot-svg{width:58%;height:58%}
+  .review-complete-image-slot .slot-svg{width:62%;height:62%}
+  .has-image > .slot-svg{display:none}
   .status-eyebrow{
     font-size:15px;
     font-weight:600;
@@ -862,10 +882,13 @@
     transition:border-color 0.3s, background 0.3s;
   }
   .info-card-slot img{
+    position:absolute;
+    inset:0;
     width:100%;height:100%;
     object-fit:cover;
     display:block;
     border-radius:inherit;
+    z-index:2;
   }
   .info-card-slot.has-image{
     border-style:solid;
@@ -1645,7 +1668,19 @@
               <div class="status-main" id="status-main">엘리베이터에 탑승했어요</div>
               <div class="status-eta" id="status-eta">⏱ 약 4분 뒤 도착</div>
             </div>
-            <div class="status-image-slot" aria-label="status image">
+            <div class="status-image-slot" aria-label="엘리베이터 탑승 중">
+              <svg class="slot-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
+                <defs>
+                  <mask id="elev-mask">
+                    <rect width="100" height="100" fill="white"/>
+                    <circle cx="50" cy="50" r="6" fill="black"/>
+                    <path d="M 35 82 L 35 72 C 35 64 41 60 50 60 C 59 60 65 64 65 72 L 65 82 L 58 82 L 58 72 L 42 72 L 42 82 Z" fill="black"/>
+                  </mask>
+                </defs>
+                <path d="M 26 24 L 32 14 L 38 24 L 34 24 L 34 32 L 30 32 L 30 24 Z" fill="#FFFF52"/>
+                <path d="M 62 14 L 66 14 L 66 24 L 70 24 L 64 34 L 58 24 L 62 24 Z" fill="#FFFF52"/>
+                <rect x="18" y="38" width="64" height="50" rx="6" fill="#FFFF52" mask="url(#elev-mask)"/>
+              </svg>
               <img src="assets/status-image.png" alt=""
                    onload="this.parentElement.classList.add('has-image')"
                    onerror="this.style.display='none'">
@@ -1737,7 +1772,12 @@
           <!-- 4) Info row: Temperature & Time -->
           <div class="status-row">
             <div class="info-card">
-              <div class="info-card-slot" aria-label="temperature icon">
+              <div class="info-card-slot" aria-label="온도 아이콘">
+                <svg class="slot-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
+                  <path d="M 16 7 C 16 4.8 17.8 3 20 3 C 22.2 3 24 4.8 24 7 L 24 25 C 26.4 26.2 28 28.9 28 32 C 28 36.4 24.4 39 20 39 C 15.6 39 12 36.4 12 32 C 12 28.9 13.6 26.2 16 25 Z"
+                        stroke="#FFFF52" stroke-width="2.6" stroke-linejoin="round"/>
+                  <circle cx="20" cy="32" r="3.6" fill="#FFFF52"/>
+                </svg>
                 <img src="assets/temp-icon.png" alt=""
                      onload="this.parentElement.classList.add('has-image')"
                      onerror="this.style.display='none'">
@@ -1817,8 +1857,16 @@
 
           <!-- Food card -->
           <div class="review-food-card">
-            <div class="review-food-image" aria-label="food image">
-              <img src="assets/menu-image.png" alt=""
+            <div class="review-food-image" aria-label="음식 이미지">
+              <svg class="slot-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="#FFFF52" aria-hidden="true">
+                <path d="M 68 18 L 90 24 L 84 44 L 62 38 Z"/>
+                <circle cx="55" cy="40" r="3"/>
+                <circle cx="60" cy="49" r="2.6"/>
+                <circle cx="69" cy="46" r="3"/>
+                <path d="M 14 56 L 86 56 L 82 75 C 78 85 67 90 50 90 C 33 90 22 85 18 75 Z"/>
+                <rect x="34" y="88" width="32" height="6" rx="2"/>
+              </svg>
+              <img src="assets/review-image.png" alt=""
                    onload="this.parentElement.classList.add('has-image')"
                    onerror="this.style.display='none'">
             </div>
@@ -1883,7 +1931,12 @@
     <!-- Review Complete Modal -->
     <div class="review-complete-overlay" id="review-complete-modal">
       <div class="review-complete-card">
-        <div class="review-complete-image-slot" aria-label="heart image">
+        <div class="review-complete-image-slot" aria-label="감사 아이콘">
+          <svg class="slot-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="#FFFF52" aria-hidden="true">
+            <path d="M 78 22 C 72 14 60 16 56 28 C 52 16 40 14 32 22 C 22 32 26 46 56 64 C 86 46 88 32 78 22 Z"/>
+            <rect x="10" y="62" width="14" height="32" rx="2.5"/>
+            <path d="M 28 64 L 60 64 C 72 64 82 70 84 80 L 86 88 C 87 93 82 96 76 96 L 36 96 C 30 96 28 92 28 87 Z"/>
+          </svg>
           <img src="assets/heart-icon.png" alt=""
                onload="this.parentElement.classList.add('has-image')"
                onerror="this.style.display='none'">
