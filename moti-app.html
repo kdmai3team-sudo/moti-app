@@ -1123,19 +1123,31 @@
     border:1.5px dashed rgba(255,255,82,0.3);
     position:relative;
     overflow:hidden;
+    transition:border-color 0.3s, background 0.3s;
   }
   .arrival-modal-image-slot::before{
     content:'';
     position:absolute;
     inset:0;
     background:radial-gradient(circle at center, var(--yellow-dim) 0%, transparent 70%);
+    transition:opacity 0.3s;
   }
   .arrival-modal-image-slot img{
+    position:absolute;
+    inset:0;
     width:100%;height:100%;
     object-fit:cover;
     display:block;
-    position:relative;
+    border-radius:inherit;
+    z-index:2;
   }
+  .arrival-modal-image-slot.has-image{
+    border-style:solid;
+    border-color:transparent;
+    background:transparent;
+  }
+  .arrival-modal-image-slot.has-image::before{opacity:0}
+  .arrival-modal-image-slot .slot-svg{width:60%;height:60%}
   .arrival-modal-title{
     font-size:20px;
     font-weight:600;
@@ -2042,8 +2054,16 @@
     <div class="arrival-modal-overlay" id="arrival-modal">
       <div class="arrival-modal-card">
         <button class="arrival-modal-close" onclick="closeArrivalModal()" aria-label="닫기">✕</button>
-        <div class="arrival-modal-image-slot" aria-label="arrival image placeholder">
-          <!-- Image goes here later -->
+        <div class="arrival-modal-image-slot" aria-label="도착 알림 아이콘">
+          <svg class="slot-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
+            <path d="M 18 36 L 50 24 L 82 36 L 82 76 L 50 88 L 18 76 Z" stroke="#FFFF52" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M 18 36 L 50 48 L 82 36" stroke="#FFFF52" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M 50 48 L 50 88" stroke="#FFFF52" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M 34 30 L 66 42" stroke="#FFFF52" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <img src="assets/arrival-icon.png" alt=""
+               onload="this.parentElement.classList.add('has-image')"
+               onerror="this.style.display='none'">
         </div>
         <div class="arrival-modal-title">방금 문 앞에 놓고 갑니다</div>
         <div class="arrival-modal-sub">노크는 조용히, 따뜻함은 그대로 전달해 두었어요</div>
