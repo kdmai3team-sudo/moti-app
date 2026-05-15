@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOTI · 따뜻한 위로 배달</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Apple SD Gothic Neo','Pretendard',sans-serif;
+    background:radial-gradient(ellipse at top,#FFF4D6 0%,#FFE9A8 60%,#FFD96B 100%);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+    gap:18px;
+  }
+
+  .brand-line{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#1A1A1A;
+    font-weight:700;
+    letter-spacing:-0.3px;
+    font-size:13px;
+    opacity:0.6;
+  }
+  .brand-line::before,.brand-line::after{
+    content:'';
+    display:block;
+    width:40px;
+    height:1px;
+    background:#1A1A1A;
+    opacity:0.4;
+  }
+
+  /* iPhone frame */
+  .iphone{
+    width:390px;
+    height:844px;
+    background:#0A0A0A;
+    border-radius:55px;
+    padding:11px;
+    box-shadow:
+      0 60px 120px rgba(160,120,0,0.25),
+      0 30px 60px rgba(0,0,0,0.2),
+      inset 0 0 0 2px rgba(255,255,255,0.05);
+    position:relative;
+    flex-shrink:0;
+  }
+  .iphone::before{
+    content:'';
+    position:absolute;
+    inset:-2px;
+    border-radius:57px;
+    background:linear-gradient(135deg,#444,#111,#444);
+    z-index:-1;
+  }
+
+  .screen{
+    width:100%;
+    height:100%;
+    background:#FFFFFF;
+    border-radius:44px;
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* Notch */
+  .notch{
+    position:absolute;
+    top:11px;
+    left:50%;
+    transform:translateX(-50%);
+    width:120px;
+    height:34px;
+    background:#000;
+    border-radius:20px;
+    z-index:300;
+  }
+
+  /* Status bar */
+  .status-bar{
+    height:54px;
+    padding:18px 32px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:16px;
+    font-weight:600;
+    color:#1A1A1A;
+    position:relative;
+    z-index:60;
+  }
+  .status-icons{display:flex;gap:6px;align-items:center}
+  .status-icons svg{display:block}
+
+  /* Screen container */
+  .screens{
+    width:100%;
+    height:calc(100% - 54px);
+    position:relative;
+  }
+
+  .page{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(16px);
+    transition:opacity 0.35s ease, transform 0.35s ease;
+  }
+  .page.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateX(0);
+  }
+  .page-content{padding:0 22px 110px}
+  .page::-webkit-scrollbar{display:none}
+  .page{scrollbar-width:none}
+
+  /* Bottom tab */
+  .tab-bar{
+    position:absolute;
+    bottom:0;left:0;right:0;
+    height:90px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid rgba(0,0,0,0.05);
+    display:flex;
+    padding-bottom:24px;
+    z-index:80;
+  }
+  .tab{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    cursor:pointer;
+    color:#BBB;
+    transition:color 0.2s;
+  }
+  .tab.active{color:#1A1A1A}
+  .tab-icon{font-size:22px;line-height:1}
+  .tab-label{font-size:10px;font-weight:700;letter-spacing:-0.2px}
+
+  /* ===== Page 1: Order ===== */
+  .header-greeting{padding:14px 0 0}
+
+  .logo-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:-1.5px;
+    color:#1A1A1A;
+    display:flex;
+    align-items:flex-end;
+    gap:3px;
+    line-height:1;
+  }
+  .logo-dot{
+    width:9px;
+    height:9px;
+    background:#FFC93C;
+    border-radius:50%;
+    margin-bottom:5px;
+  }
+  .profile{
+    width:38px;height:38px;
+    border-radius:50%;
+    background:#FFF6DA;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+  }
+
+  .greeting-time{
+    font-size:12px;
+    color:#A0A0A0;
+    margin-top:18px;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  .greeting-message{
+    font-size:26px;
+    font-weight:800;
+    color:#1A1A1A;
+    line-height:1.32;
+    letter-spacing:-0.8px;
+    margin-top:6px;
+  }
+  .accent-yellow{
+    background:linear-gradient(180deg,transparent 62%,#FFE17D 62%);
+    padding:0 2px;
+  }
+
+  /* Menu card */
+  .menu-card{
+    margin-top:24px;
+    background:#FFFAEB;
+    border-radius:32px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 8px 28px rgba(255,180,0,0.08);
+  }
+  .menu-badge{
+    position:absolute;
+    top:18px;left:18px;
+    background:#1A1A1A;
+    color:#FFC93C;
+    padding:7px 13px;
+    border-radius:100px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:-0.2px;
+    z-index:2;
+  }
+  .menu-fav{
+    position:absolute;
+    top:18px;right:18px;
+    width:36px;height:36px;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(10px);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+    z-index:2;
+  }
+
+  .menu-image{
+    width:100%;
+    height:220px;
+    background:linear-gradient(135deg,#FFE17D 0%,#FFC93C 70%,#FFAA00 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .menu-image::before{
+    content:'';
+    position:absolute;
+    width:180px;height:180px;
+    background:rgba(255,255,255,0.35);
+    border-radius:50%;
+    filter:blur(30px);
+    top:20%;left:30%;
+  }
+  .food-emoji{
+    font-size:120px;
+    line-height:1;
+    filter:drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+    position:relative;
+    z-index:1;
+  }
+  .steam{
+    position:absolute;
+    top:30px;left:50%;
+    transform:translateX(-50%);
+    font-size:24px;
+    opacity:0.7;
+    animation:steam 2.5s infinite ease-in-out;
+  }
+  @keyframes steam{
+    0%,100%{opacity:0;transform:translate(-50%,10px) scale(0.8)}
+    50%{opacity:0.7;transform:translate(-50%,-10px) scale(1.1)}
+  }
+
+  .menu-info{padding:22px 22px 24px}
+  .menu-title{
+    font-size:22px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.7px;
+  }
+  .menu-subtitle{
+    font-size:12px;
+    color:#9A9A9A;
+    margin-top:4px;
+    font-weight:600;
+  }
+  .menu-desc{
+    font-size:13px;
+    color:#5A5A5A;
+    line-height:1.65;
+    margin-top:14px;
+  }
+  .menu-tags{
+    display:flex;
+    gap:6px;
+    margin-top:16px;
+    flex-wrap:wrap;
+  }
+  .menu-tag{
+    background:#FFFFFF;
+    border:1.5px solid #FFE17D;
+    color:#7A6B2E;
+    padding:6px 11px;
+    border-radius:100px;
+    font-size:11px;
+    font-weight:700;
+  }
+
+  .price-row{
+    margin-top:18px;
+    padding-top:18px;
+    border-top:1px dashed #F0D78A;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .price-label{
+    font-size:11px;
+    color:#9A9A9A;
+    font-weight:700;
+    letter-spacing:0.5px;
+  }
+  .price-value{
+    font-size:24px;
+    font-weight:900;
+    color:#1A1A1A;
+    letter-spacing:-0.8px;
+    margin-top:2px;
+  }
+  .price-note{
+    font-size:11px;
+    color:#7A7A7A;
+    text-align:right;
+  }
+  .price-note b{color:#1A1A1A;font-weight:700}
+
+  /* Story card */
+  .story-card{
+    margin-top:16px;
+    background:#FFFFFF;
+    border:1.5px solid #F4F4F4;
+    border-radius:22px;
+    padding:18px 20px;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+  }
+  .story-icon{
+    width:46px;height:46px;
+    background:#FFFAEB;
+    border-radius:15px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+    flex-shrink:0;
+  }
+  .story-title{
+    font-size:14px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.3px;
+  }
+  .story-text{
+    font-size:12px;
+    color:#7A7A7A;
+    margin-top:4px;
+    line-height:1.55;
+  }
+
+  /* Order button */
+  .order-btn{
+    margin-top:22px;
+    background:#1A1A1A;
+    color:#FFC93C;
+    border:none;
+    width:100%;
+    padding:22px;
+    border-radius:26px;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+    transition:transform 0.15s;
+    letter-spacing:-0.3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    box-shadow:0 12px 24px rgba(26,26,26,0.18);
+  }
+  .order-btn:active{transform:scale(0.98)}
+  .order-btn .arrow{transition:transform 0.2s}
+  .order-btn:active .arrow{transform:translateX(4px)}
+
+  /* ===== Modal ===== */
+  .modal-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    z-index:250;
+    display:flex;
+    align-items:flex-end;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s;
+  }
+  .modal-overlay.show{opacity:1;pointer-events:auto}
+  .modal-sheet{
+    background:#FFFFFF;
+    width:100%;
+    border-radius:36px 36px 0 0;
+    padding:14px 24px 40px;
+    transform:translateY(100%);
+    transition:transform 0.4s cubic-bezier(0.32,0.72,0,1);
+  }
+  .modal-overlay.show .modal-sheet{transform:translateY(0)}
+  .modal-handle{
+    width:42px;height:5px;
+    background:#E5E5E5;
+    border-radius:100px;
+    margin:6px auto 24px;
+  }
+  .modal-icon{
+    width:80px;height:80px;
+    background:linear-gradient(135deg,#FFE17D,#FFC93C);
+    border-radius:26px;
+    margin:0 auto 18px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:38px;
+    box-shadow:0 12px 24px rgba(255,180,0,0.3);
+  }
+  .modal-title{
+    text-align:center;
+    font-size:22px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.5px;
+  }
+  .modal-subtitle{
+    text-align:center;
+    font-size:13px;
+    color:#7A7A7A;
+    margin-top:8px;
+    line-height:1.55;
+  }
+  .code-display{
+    margin:22px 0 8px;
+    background:#FFFAEB;
+    border-radius:22px;
+    padding:24px;
+    text-align:center;
+    border:2px dashed #FFC93C;
+  }
+  .code-label{
+    font-size:10px;
+    color:#7A6B2E;
+    font-weight:800;
+    letter-spacing:2px;
+  }
+  .code-value{
+    font-size:42px;
+    font-weight:900;
+    color:#1A1A1A;
+    letter-spacing:10px;
+    margin-top:6px;
+    font-family:'SF Mono','Menlo',monospace;
+  }
+  .code-hint{
+    font-size:11px;
+    color:#9A9A9A;
+    margin-top:6px;
+  }
+  .modal-btn{
+    margin-top:18px;
+    background:#FFC93C;
+    color:#1A1A1A;
+    border:none;
+    width:100%;
+    padding:19px;
+    border-radius:22px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    letter-spacing:-0.3px;
+  }
+
+  /* ===== Page 2: Delivery ===== */
+  .delivery-header{
+    padding:14px 0 4px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .page-title{
+    font-size:20px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.5px;
+  }
+  .order-code-pill{
+    background:#FFFAEB;
+    color:#7A6B2E;
+    padding:7px 13px;
+    border-radius:100px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:0.5px;
+  }
+
+  .status-banner{
+    margin-top:18px;
+    background:linear-gradient(135deg,#FFE17D 0%,#FFC93C 100%);
+    border-radius:28px;
+    padding:24px 22px;
+    position:relative;
+    overflow:hidden;
+    min-height:140px;
+  }
+  .robot-art{
+    position:absolute;
+    right:14px;
+    bottom:-6px;
+    font-size:88px;
+    line-height:1;
+    animation:bob 2.2s infinite ease-in-out;
+  }
+  @keyframes bob{
+    0%,100%{transform:translateY(0) rotate(-2deg)}
+    50%{transform:translateY(-8px) rotate(2deg)}
+  }
+  .status-eyebrow{
+    font-size:11px;
+    font-weight:800;
+    color:#7A6B2E;
+    letter-spacing:1.5px;
+  }
+  .status-main{
+    font-size:24px;
+    font-weight:800;
+    color:#1A1A1A;
+    margin-top:8px;
+    line-height:1.25;
+    letter-spacing:-0.6px;
+    max-width:200px;
+  }
+  .status-eta{
+    margin-top:14px;
+    background:rgba(255,255,255,0.7);
+    backdrop-filter:blur(10px);
+    padding:8px 14px;
+    border-radius:100px;
+    display:inline-block;
+    font-size:12px;
+    font-weight:800;
+    color:#1A1A1A;
+  }
+
+  /* Building floor view */
+  .building-view{
+    margin-top:14px;
+    background:#FFFFFF;
+    border:1.5px solid #F4F4F4;
+    border-radius:24px;
+    padding:20px 20px 16px;
+  }
+  .section-title{
+    font-size:13px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.3px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .live-tag{
+    background:#FFC93C;
+    color:#1A1A1A;
+    padding:4px 9px;
+    border-radius:100px;
+    font-size:9px;
+    font-weight:900;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    letter-spacing:0.5px;
+  }
+  .live-dot{
+    width:5px;height:5px;
+    background:#1A1A1A;
+    border-radius:50%;
+    animation:pulse 1.4s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1}
+    50%{opacity:0.3}
+  }
+
+  .floors{
+    margin-top:14px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .floor{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:6px 0;
+    position:relative;
+  }
+  .floor-num{
+    font-size:11px;
+    font-weight:800;
+    color:#BBB;
+    width:30px;
+    text-align:center;
+  }
+  .floor-line{
+    flex:1;
+    height:38px;
+    background:#F8F8F8;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    font-size:12px;
+    color:#7A7A7A;
+    position:relative;
+    font-weight:600;
+  }
+  .floor.current .floor-num{color:#1A1A1A;font-size:13px}
+  .floor.current .floor-line{
+    background:#FFFAEB;
+    border:1.5px solid #FFC93C;
+    color:#1A1A1A;
+    font-weight:700;
+  }
+  .floor.passed .floor-num{color:#D5D5D5}
+  .floor.passed .floor-line{
+    background:#FAFAFA;
+    color:#C5C5C5;
+  }
+  .robot-marker{
+    position:absolute;
+    right:12px;
+    font-size:20px;
+  }
+  .floor-check{
+    position:absolute;
+    right:14px;
+    color:#FFC93C;
+    font-weight:800;
+    font-size:14px;
+  }
+
+  /* Info row */
+  .status-row{
+    margin-top:14px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .info-card{
+    background:#FFFFFF;
+    border:1.5px solid #F4F4F4;
+    border-radius:22px;
+    padding:18px;
+  }
+  .info-card-icon{
+    width:38px;height:38px;
+    background:#FFFAEB;
+    border-radius:13px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+  }
+  .info-card-label{
+    font-size:11px;
+    color:#9A9A9A;
+    margin-top:12px;
+    font-weight:700;
+  }
+  .info-card-value{
+    font-size:22px;
+    font-weight:900;
+    color:#1A1A1A;
+    margin-top:2px;
+    letter-spacing:-0.5px;
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+  }
+  .info-card-unit{
+    font-size:13px;
+    color:#7A7A7A;
+    font-weight:700;
+  }
+  .temp-bar{
+    height:6px;
+    background:#F2F2F2;
+    border-radius:100px;
+    margin-top:8px;
+    overflow:hidden;
+  }
+  .temp-bar-fill{
+    height:100%;
+    background:linear-gradient(90deg,#FFC93C,#FF6B35);
+    border-radius:100px;
+    width:85%;
+  }
+  .info-mini{
+    font-size:11px;
+    color:#7A7A7A;
+    margin-top:10px;
+    font-weight:600;
+  }
+
+  /* Timeline */
+  .timeline{
+    margin-top:14px;
+    background:#FFFFFF;
+    border:1.5px solid #F4F4F4;
+    border-radius:24px;
+    padding:20px;
+  }
+  .timeline-list{
+    margin-top:14px;
+    position:relative;
+    padding-left:24px;
+  }
+  .timeline-list::before{
+    content:'';
+    position:absolute;
+    left:7px;top:8px;bottom:8px;
+    width:2px;
+    background:#F2F2F2;
+  }
+  .timeline-item{
+    position:relative;
+    padding:6px 0 16px;
+  }
+  .timeline-item:last-child{padding-bottom:0}
+  .timeline-dot{
+    position:absolute;
+    left:-24px;top:8px;
+    width:16px;height:16px;
+    background:#E5E5E5;
+    border:3px solid #FFFFFF;
+    border-radius:50%;
+    box-shadow:0 0 0 2px #E5E5E5;
+  }
+  .timeline-item.done .timeline-dot{
+    background:#FFC93C;
+    box-shadow:0 0 0 2px #FFC93C;
+  }
+  .timeline-item.active .timeline-dot{
+    background:#1A1A1A;
+    box-shadow:0 0 0 2px #1A1A1A;
+    animation:pulseDot 1.5s infinite;
+  }
+  @keyframes pulseDot{
+    0%,100%{box-shadow:0 0 0 2px #1A1A1A}
+    50%{box-shadow:0 0 0 7px rgba(26,26,26,0.15)}
+  }
+  .timeline-title{
+    font-size:13px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.2px;
+  }
+  .timeline-item:not(.done):not(.active) .timeline-title{
+    color:#BBB;
+    font-weight:700;
+  }
+  .timeline-time{
+    font-size:11px;
+    color:#9A9A9A;
+    margin-top:3px;
+    font-weight:600;
+  }
+
+  /* Arrival */
+  .arrival-banner{
+    margin-top:14px;
+    background:#1A1A1A;
+    color:#FFC93C;
+    border-radius:28px;
+    padding:26px 22px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform 0.2s;
+    box-shadow:0 16px 32px rgba(26,26,26,0.25);
+  }
+  .arrival-banner:active{transform:scale(0.98)}
+  .arrival-emoji{
+    font-size:54px;
+    margin-bottom:10px;
+    display:block;
+    line-height:1;
+    animation:knock 1.5s infinite ease-in-out;
+  }
+  @keyframes knock{
+    0%,100%{transform:rotate(0)}
+    20%{transform:rotate(-12deg)}
+    60%{transform:rotate(12deg)}
+  }
+  .arrival-title{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+    color:#FFFFFF;
+  }
+  .arrival-sub{
+    font-size:12px;
+    color:#FFC93C;
+    margin-top:8px;
+    opacity:0.95;
+    font-weight:600;
+  }
+  .arrival-cta{
+    margin-top:14px;
+    display:inline-block;
+    background:#FFC93C;
+    color:#1A1A1A;
+    padding:9px 18px;
+    border-radius:100px;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  /* Demo switch */
+  .demo-toggle{
+    margin-top:14px;
+    background:transparent;
+    border:1.5px dashed #DDD;
+    color:#9A9A9A;
+    padding:11px;
+    border-radius:14px;
+    font-size:11px;
+    width:100%;
+    cursor:pointer;
+    font-weight:600;
+    font-family:inherit;
+  }
+
+  /* ===== Page 3: Collect & Review ===== */
+  .collect-hero{
+    margin-top:18px;
+    background:#FFFAEB;
+    border-radius:32px;
+    padding:32px 24px 22px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .collect-hero::before{
+    content:'';
+    position:absolute;
+    width:200px;height:200px;
+    background:#FFE17D;
+    border-radius:50%;
+    top:-100px;right:-60px;
+    opacity:0.5;
+  }
+  .collect-emoji{
+    font-size:72px;
+    line-height:1;
+    position:relative;
+  }
+  .collect-title{
+    font-size:23px;
+    font-weight:800;
+    color:#1A1A1A;
+    margin-top:14px;
+    letter-spacing:-0.5px;
+    position:relative;
+  }
+  .collect-sub{
+    font-size:13px;
+    color:#7A7A7A;
+    margin-top:8px;
+    line-height:1.55;
+    position:relative;
+  }
+  .collect-time{
+    margin-top:18px;
+    background:#FFFFFF;
+    border-radius:18px;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    position:relative;
+  }
+  .collect-time-label{
+    font-size:10px;
+    color:#9A9A9A;
+    font-weight:800;
+    letter-spacing:0.5px;
+  }
+  .collect-time-value{
+    font-size:14px;
+    font-weight:800;
+    color:#1A1A1A;
+    margin-top:3px;
+    letter-spacing:-0.3px;
+  }
+  .collect-btn{
+    margin-top:14px;
+    background:#FFC93C;
+    color:#1A1A1A;
+    border:none;
+    width:100%;
+    padding:18px;
+    border-radius:20px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    letter-spacing:-0.3px;
+    position:relative;
+    transition:transform 0.15s;
+  }
+  .collect-btn:active{transform:scale(0.98)}
+  .collect-btn.done{
+    background:#1A1A1A;
+    color:#FFC93C;
+  }
+
+  .review-section{margin-top:26px}
+  .review-title{
+    font-size:19px;
+    font-weight:800;
+    color:#1A1A1A;
+    letter-spacing:-0.4px;
+  }
+  .review-sub{
+    font-size:13px;
+    color:#7A7A7A;
+    margin-top:5px;
+    line-height:1.5;
+  }
+  .stars{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    background:linear-gradient(135deg,#FFFAEB,#FFF6DA);
+    padding:22px;
+    border-radius:22px;
+  }
+  .star{
+    font-size:38px;
+    cursor:pointer;
+    color:#E8E8E8;
+    transition:transform 0.15s,color 0.2s;
+    user-select:none;
+    line-height:1;
+  }
+  .star:active{transform:scale(1.25)}
+  .star.active{color:#FFC93C;text-shadow:0 4px 12px rgba(255,200,60,0.5)}
+
+  .review-tags{
+    margin-top:16px;
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+  }
+  .review-tag{
+    background:#FFFFFF;
+    border:1.5px solid #EFEFEF;
+    color:#5A5A5A;
+    padding:10px 14px;
+    border-radius:100px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:all 0.2s;
+  }
+  .review-tag.active{
+    background:#1A1A1A;
+    color:#FFC93C;
+    border-color:#1A1A1A;
+  }
+
+  .review-input{
+    margin-top:14px;
+    background:#F8F8F8;
+    border:1.5px solid transparent;
+    border-radius:20px;
+    padding:16px 18px;
+    width:100%;
+    min-height:100px;
+    font-size:13px;
+    font-family:inherit;
+    color:#1A1A1A;
+    resize:none;
+    outline:none;
+    line-height:1.6;
+    transition:border-color 0.2s;
+  }
+  .review-input:focus{border-color:#FFC93C;background:#FFFAEB}
+  .review-input::placeholder{color:#BBB}
+
+  .submit-btn{
+    margin-top:14px;
+    background:#1A1A1A;
+    color:#FFC93C;
+    border:none;
+    width:100%;
+    padding:20px;
+    border-radius:22px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    letter-spacing:-0.3px;
+    box-shadow:0 12px 24px rgba(26,26,26,0.15);
+  }
+
+  /* Thank you */
+  .thank-you{
+    text-align:center;
+    padding:70px 30px 40px;
+  }
+  .thank-emoji{
+    font-size:84px;
+    line-height:1;
+    animation:heart 1.8s infinite ease-in-out;
+  }
+  @keyframes heart{
+    0%,100%{transform:scale(1)}
+    20%,60%{transform:scale(1.15)}
+    40%,80%{transform:scale(1)}
+  }
+  .thank-title{
+    font-size:24px;
+    font-weight:800;
+    color:#1A1A1A;
+    margin-top:20px;
+    letter-spacing:-0.6px;
+    line-height:1.35;
+  }
+  .thank-sub{
+    font-size:14px;
+    color:#7A7A7A;
+    margin-top:12px;
+    line-height:1.7;
+  }
+  .thank-card{
+    margin-top:24px;
+    background:#FFFAEB;
+    border-radius:20px;
+    padding:18px;
+    font-size:12px;
+    color:#7A6B2E;
+    font-weight:700;
+  }
+  .thank-card b{
+    color:#1A1A1A;
+    font-size:14px;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .hidden{display:none !important}
+
+  .hint{
+    margin-top:8px;
+    font-size:12px;
+    color:#1A1A1A;
+    opacity:0.5;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="brand-line">MOTI · 따뜻한 위로 배달 서비스</div>
+
+<div class="iphone">
+  <div class="notch"></div>
+  <div class="screen">
+    <div class="status-bar">
+      <div>9:41</div>
+      <div class="status-icons">
+        <!-- cellular -->
+        <svg width="18" height="11" viewBox="0 0 18 11"><g fill="#1A1A1A"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13.5" y="0" width="3" height="11" rx="0.5"/></g></svg>
+        <!-- wifi -->
+        <svg width="16" height="11" viewBox="0 0 16 11"><path d="M8 11l2-2.5a2.5 2.5 0 00-4 0L8 11zM3 6l1.5 1.5a5 5 0 017 0L13 6a7 7 0 00-10 0zM0 3l1.5 1.5a9 9 0 0113 0L16 3a11 11 0 00-16 0z" fill="#1A1A1A"/></svg>
+        <!-- battery -->
+        <svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1A1A1A" stroke-opacity="0.4"/><rect x="2" y="2" width="19" height="8" rx="1.5" fill="#1A1A1A"/><rect x="23.5" y="3.5" width="1.5" height="5" rx="0.5" fill="#1A1A1A" fill-opacity="0.4"/></svg>
+      </div>
+    </div>
+
+    <div class="screens">
+
+      <!-- =========== PAGE 1: ORDER =========== -->
+      <div class="page active" id="page-order">
+        <div class="page-content">
+          <div class="header-greeting">
+            <div class="logo-row">
+              <div class="logo">moti<span class="logo-dot"></span></div>
+              <div class="profile">😊</div>
+            </div>
+            <div class="greeting-time">2026.05.15 · 금요일 저녁 8:42</div>
+            <div class="greeting-message">오늘도 야근 중이신가요?<br>따뜻한 한 끼,<br><span class="accent-yellow">정성껏 전해드릴게요</span>.</div>
+          </div>
+
+          <!-- Today's Menu -->
+          <div class="menu-card">
+            <div class="menu-badge">🌙 오늘의 한 끼</div>
+            <div class="menu-fav">🤍</div>
+            <div class="menu-image">
+              <span class="steam">︵</span>
+              <span class="food-emoji">🍱</span>
+            </div>
+            <div class="menu-info">
+              <div class="menu-title">엄마의 소고기뭇국 정식</div>
+              <div class="menu-subtitle">집밥 한 그릇, 매일 단 하나의 메뉴</div>
+              <div class="menu-desc">진하게 끓인 소고기뭇국과 갓 지은 흰밥, 정성스레 무친 나물 세 가지. 보온 체임버에서 <b>65℃</b>를 유지한 채 자리까지 도착해요.</div>
+              <div class="menu-tags">
+                <span class="menu-tag">🌾 갓 지은 밥</span>
+                <span class="menu-tag">🥩 한우 사골</span>
+                <span class="menu-tag">🥬 국내산 나물</span>
+              </div>
+
+              <div class="price-row">
+                <div>
+                  <div class="price-label">TONIGHT</div>
+                  <div class="price-value">8,900<span style="font-size:14px;color:#7A7A7A;font-weight:700;letter-spacing:0">원</span></div>
+                </div>
+                <div class="price-note">
+                  배달 약 <b>18분</b><br>도착 시 <b>65℃</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Story -->
+          <div class="story-card">
+            <div class="story-icon">🤲</div>
+            <div>
+              <div class="story-title">하루에 단 한 메뉴, 정성으로 준비해요</div>
+              <div class="story-text">인도 다바왈라의 철학을 담아 매일 새로 정한 단 하나의 가정식을, 휴머노이드 로봇이 따뜻한 그대로 전해드려요.</div>
+            </div>
+          </div>
+
+          <!-- Order Button -->
+          <button class="order-btn" onclick="openOrderModal()">
+            <span>지금 주문하기 · 8,900원</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- =========== PAGE 2: DELIVERY =========== -->
+      <div class="page" id="page-delivery">
+        <div class="page-content">
+          <div class="delivery-header">
+            <div>
+              <div class="page-title">배달 중이에요</div>
+              <div style="font-size:12px;color:#9A9A9A;margin-top:2px;font-weight:600">엄마의 소고기뭇국 정식</div>
+            </div>
+            <div class="order-code-pill">MOTI · 3829</div>
+          </div>
+
+          <!-- Live Status Banner -->
+          <div class="status-banner" id="status-banner">
+            <div class="status-eyebrow">DELIVERY IN PROGRESS</div>
+            <div class="status-main" id="status-main">엘리베이터에<br>탑승했어요</div>
+            <div class="status-eta" id="status-eta">⏱ 약 4분 뒤 도착</div>
+            <div class="robot-art">🤖</div>
+          </div>
+
+          <!-- Arrival banner (hidden by default) -->
+          <div class="arrival-banner hidden" id="arrival-banner" onclick="goToCollect()">
+            <span class="arrival-emoji">🚪</span>
+            <div class="arrival-title">방금 문 앞에 놓고 갑니다</div>
+            <div class="arrival-sub">노크는 조용히, 따뜻함은 그대로</div>
+            <div class="arrival-cta">받으러 가기 →</div>
+          </div>
+
+          <!-- Building Floor View -->
+          <div class="building-view">
+            <div class="section-title">
+              <span>🏢 건물 내 이동 경로</span>
+              <span class="live-tag"><span class="live-dot"></span>LIVE</span>
+            </div>
+            <div class="floors">
+              <div class="floor">
+                <div class="floor-num">12F</div>
+                <div class="floor-line">내 자리 (도착 예정)</div>
+              </div>
+              <div class="floor current">
+                <div class="floor-num">8F</div>
+                <div class="floor-line">엘리베이터 상승 중<span class="robot-marker">🤖</span></div>
+              </div>
+              <div class="floor passed">
+                <div class="floor-num">5F</div>
+                <div class="floor-line">보안 게이트 인증 완료<span class="floor-check">✓</span></div>
+              </div>
+              <div class="floor passed">
+                <div class="floor-num">1F</div>
+                <div class="floor-line">로비 출발<span class="floor-check">✓</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info row: Temperature & Time -->
+          <div class="status-row">
+            <div class="info-card">
+              <div class="info-card-icon">🌡️</div>
+              <div class="info-card-label">음식 온도 (보온 체임버)</div>
+              <div class="info-card-value">65<span class="info-card-unit">°C</span></div>
+              <div class="temp-bar"><div class="temp-bar-fill"></div></div>
+              <div class="info-mini">따뜻함 유지 중</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">⏰</div>
+              <div class="info-card-label">도착 예정 시각</div>
+              <div class="info-card-value">20:48</div>
+              <div class="info-mini">출발 20:42 · 약 4분 남음</div>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="timeline">
+            <div class="section-title">이동 타임라인</div>
+            <div class="timeline-list">
+              <div class="timeline-item done">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">주문 접수 · 따뜻하게 포장 완료</div>
+                <div class="timeline-time">20:42</div>
+              </div>
+              <div class="timeline-item done">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">로봇 출발 · 보온 체임버 가동</div>
+                <div class="timeline-time">20:44</div>
+              </div>
+              <div class="timeline-item active">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">엘리베이터 탑승 중</div>
+                <div class="timeline-time">20:46 · 진행 중</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">사무실 도착 · 조용히 노크</div>
+                <div class="timeline-time">예정 20:48</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Demo Helper -->
+          <button class="demo-toggle" onclick="toggleArrival()">[데모] 도착 알림 상태 보기 / 숨기기</button>
+        </div>
+      </div>
+
+      <!-- =========== PAGE 3: COLLECT & REVIEW =========== -->
+      <div class="page" id="page-collect">
+        <div class="page-content" id="collect-content">
+          <div class="delivery-header">
+            <div>
+              <div class="page-title">잘 드셨나요?</div>
+              <div style="font-size:12px;color:#9A9A9A;margin-top:2px;font-weight:600">오늘 식사 정리 & 후기</div>
+            </div>
+            <div class="order-code-pill">MOTI · 3829</div>
+          </div>
+
+          <!-- Collect hero -->
+          <div class="collect-hero">
+            <div class="collect-emoji">🍵</div>
+            <div class="collect-title">식사 잘 마치셨다면<br>도시락은 두고 가셔도 돼요</div>
+            <div class="collect-sub">다바왈라의 순환처럼,<br>로봇이 조용히 가져갈게요.</div>
+
+            <div class="collect-time">
+              <div>
+                <div class="collect-time-label">예약 수거 시간</div>
+                <div class="collect-time-value">오늘 밤 21:30</div>
+              </div>
+              <div style="text-align:right">
+                <div class="collect-time-label">수거 위치</div>
+                <div class="collect-time-value">자리 앞 그대로</div>
+              </div>
+            </div>
+
+            <button class="collect-btn" id="collect-btn" onclick="requestCollect()">지금 바로 수거 요청하기</button>
+          </div>
+
+          <!-- Review -->
+          <div class="review-section">
+            <div class="review-title">오늘의 한 끼는 어땠나요?</div>
+            <div class="review-sub">짧게 남겨주신 한 마디가<br>내일의 정성이 됩니다.</div>
+
+            <div class="stars" id="stars">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+
+            <div class="review-tags">
+              <span class="review-tag">🔥 따뜻했어요</span>
+              <span class="review-tag">🤲 정성스러워요</span>
+              <span class="review-tag">💛 위로가 됐어요</span>
+              <span class="review-tag">⏱ 빠르게 왔어요</span>
+              <span class="review-tag">🧹 깔끔했어요</span>
+              <span class="review-tag">🍚 맛있었어요</span>
+            </div>
+
+            <textarea class="review-input" placeholder="짧은 한 줄이라도 좋아요. 오늘의 마음을 남겨주세요."></textarea>
+
+            <button class="submit-btn" onclick="submitReview()">후기 남기고 마무리하기</button>
+          </div>
+        </div>
+
+        <!-- Thank you state -->
+        <div class="page-content thank-you hidden" id="thank-content">
+          <div class="thank-emoji">💛</div>
+          <div class="thank-title">고마워요,<br>오늘도 수고 많으셨어요.</div>
+          <div class="thank-sub">남겨주신 마음은 다음 식사의<br>따뜻함이 됩니다.</div>
+          <div class="thank-card">
+            <b>적립 포인트 +500P</b>
+            정성 적립금이 쌓였어요. 내일도 따뜻한 한 끼로 만나요.
+          </div>
+          <button class="submit-btn" onclick="resetFlow()">처음으로 돌아가기</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <div class="tab active" data-page="page-order">
+        <div class="tab-icon">🍱</div>
+        <div class="tab-label">주문</div>
+      </div>
+      <div class="tab" data-page="page-delivery">
+        <div class="tab-icon">🤖</div>
+        <div class="tab-label">배달</div>
+      </div>
+      <div class="tab" data-page="page-collect">
+        <div class="tab-icon">💛</div>
+        <div class="tab-label">수거·후기</div>
+      </div>
+    </div>
+
+    <!-- Order Code Modal -->
+    <div class="modal-overlay" id="order-modal">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-icon">✨</div>
+        <div class="modal-title">주문이 접수됐어요</div>
+        <div class="modal-subtitle">아래 코드는 로봇이 사무실에 진입할 때<br>본인 인증에 사용돼요.</div>
+        <div class="code-display">
+          <div class="code-label">DELIVERY CODE</div>
+          <div class="code-value">3829</div>
+          <div class="code-hint">로봇 도착 시 화면 또는 사원증으로 인증</div>
+        </div>
+        <button class="modal-btn" onclick="closeModalAndTrack()">배달 현황 보러가기 →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="hint">탭 바로 화면 전환 · 주문하기 버튼으로 전체 플로우 체험</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>switchPage(tab.dataset.page));
+  });
+
+  function switchPage(pageId){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelector(`.tab[data-page="${pageId}"]`).classList.add('active');
+  }
+
+  function openOrderModal(){
+    document.getElementById('order-modal').classList.add('show');
+  }
+
+  function closeModalAndTrack(){
+    document.getElementById('order-modal').classList.remove('show');
+    setTimeout(()=>switchPage('page-delivery'),250);
+  }
+
+  function toggleArrival(){
+    const banner=document.getElementById('arrival-banner');
+    const statusMain=document.getElementById('status-main');
+    const statusEta=document.getElementById('status-eta');
+    const statusBanner=document.getElementById('status-banner');
+    if(banner.classList.contains('hidden')){
+      banner.classList.remove('hidden');
+      statusMain.innerHTML='문 앞에<br>도착했어요';
+      statusEta.textContent='💛 따뜻하게 잘 드세요';
+      statusBanner.style.background='linear-gradient(135deg,#FFD96B,#FFAA00)';
+    }else{
+      banner.classList.add('hidden');
+      statusMain.innerHTML='엘리베이터에<br>탑승했어요';
+      statusEta.textContent='⏱ 약 4분 뒤 도착';
+      statusBanner.style.background='linear-gradient(135deg,#FFE17D 0%,#FFC93C 100%)';
+    }
+  }
+
+  function goToCollect(){switchPage('page-collect')}
+
+  let currentRating=0;
+  document.querySelectorAll('.star').forEach(star=>{
+    star.addEventListener('click',()=>{
+      currentRating=parseInt(star.dataset.value);
+      document.querySelectorAll('.star').forEach(s=>{
+        s.classList.toggle('active',parseInt(s.dataset.value)<=currentRating);
+      });
+    });
+  });
+
+  document.querySelectorAll('.review-tag').forEach(tag=>{
+    tag.addEventListener('click',()=>tag.classList.toggle('active'));
+  });
+
+  function requestCollect(){
+    const btn=document.getElementById('collect-btn');
+    btn.textContent='✓ 수거 요청 완료 · 곧 로봇이 와요';
+    btn.classList.add('done');
+    btn.disabled=true;
+  }
+
+  function submitReview(){
+    document.getElementById('collect-content').classList.add('hidden');
+    document.getElementById('thank-content').classList.remove('hidden');
+  }
+
+  function resetFlow(){
+    document.getElementById('thank-content').classList.add('hidden');
+    document.getElementById('collect-content').classList.remove('hidden');
+    document.querySelectorAll('.star').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.review-tag').forEach(t=>t.classList.remove('active'));
+    document.querySelector('.review-input').value='';
+    const btn=document.getElementById('collect-btn');
+    btn.textContent='지금 바로 수거 요청하기';
+    btn.classList.remove('done');
+    btn.disabled=false;
+    currentRating=0;
+    switchPage('page-order');
+  }
+</script>
+</body>
+</html>
