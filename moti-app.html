@@ -1850,7 +1850,15 @@
               <div class="info-mini">따뜻함 유지 중</div>
             </div>
             <div class="info-card">
-              <div class="info-card-slot" aria-label="time icon placeholder"></div>
+              <div class="info-card-slot" aria-label="시간 아이콘">
+                <svg class="slot-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
+                  <circle cx="20" cy="20" r="13" stroke="#FFFF52" stroke-width="2.6"/>
+                  <path d="M 20 11 L 20 20 L 27 22" stroke="#FFFF52" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <img src="assets/time-icon.png" alt=""
+                     onload="this.parentElement.classList.add('has-image')"
+                     onerror="this.style.display='none'">
+              </div>
               <div class="info-card-label">도착 예정 시각</div>
               <div class="info-card-value">20:48</div>
               <div class="temp-bar"><div class="temp-bar-fill" style="width:65%"></div></div>
