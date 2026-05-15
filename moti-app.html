@@ -716,6 +716,8 @@
     margin-top:8px;
     line-height:1.35;
     letter-spacing:-0.4px;
+    word-break:keep-all;
+    word-spacing:-0.05em;
     position:relative;
   }
   .status-eta{
@@ -1118,14 +1120,42 @@
     top:-120px;right:-80px;
     opacity:0.18;
   }
-  .collect-emoji{
-    font-size:56px;
-    line-height:1;
+  .collect-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto;
+    border-radius:20px;
+    background:rgba(255,255,82,0.06);
+    border:1.5px dashed rgba(255,255,82,0.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
     position:relative;
-    filter:drop-shadow(0 8px 24px var(--yellow-glow));
+    overflow:hidden;
+    transition:border-color 0.3s, background 0.3s;
+  }
+  .collect-icon img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:inherit;
+  }
+  .collect-icon.has-image{
+    border-style:solid;
+    border-color:transparent;
+    background:transparent;
+  }
+  .collect-icon.has-image .collect-icon-fallback{display:none}
+  .collect-icon-fallback{
+    font-size:32px;
+    line-height:1;
+    filter:drop-shadow(0 0 14px var(--yellow-glow));
+    position:relative;
   }
   .collect-title{
-    font-size:21px;
+    font-size:20px;
     font-weight:600;
     color:var(--text);
     margin-top:18px;
@@ -1176,8 +1206,8 @@
     width:100%;
     padding:18px;
     border-radius:20px;
-    font-size:15px;
-    font-weight:700;
+    font-size:17px;
+    font-weight:600;
     cursor:pointer;
     letter-spacing:-0.3px;
     position:relative;
@@ -1201,10 +1231,10 @@
     padding:24px 22px 22px;
   }
   .review-entry-title{
-    font-size:18px;
-    font-weight:700;
+    font-size:20px;
+    font-weight:600;
     color:var(--text);
-    letter-spacing:-0.4px;
+    letter-spacing:-0.5px;
   }
   .review-entry-sub{
     font-size:12.5px;
@@ -1224,8 +1254,8 @@
     width:100%;
     padding:18px;
     border-radius:18px;
-    font-size:15px;
-    font-weight:700;
+    font-size:17px;
+    font-weight:600;
     cursor:pointer;
     letter-spacing:-0.3px;
     box-shadow:0 14px 32px rgba(255,255,82,0.25);
@@ -1293,24 +1323,34 @@
     border:1.5px dashed rgba(255,255,82,0.3);
     position:relative;
     overflow:hidden;
+    transition:border-color 0.3s, background 0.3s;
   }
   .review-food-image::before{
     content:'';
     position:absolute;
     inset:0;
     background:radial-gradient(circle at center, var(--yellow-dim) 0%, transparent 70%);
+    transition:opacity 0.3s;
   }
   .review-food-image img{
+    position:absolute;
+    inset:0;
     width:100%;height:100%;
     object-fit:cover;
     display:block;
-    position:relative;
+    border-radius:inherit;
   }
+  .review-food-image.has-image{
+    border-style:solid;
+    border-color:transparent;
+    background:transparent;
+  }
+  .review-food-image.has-image::before{opacity:0}
   .review-food-name{
-    font-size:17px;
-    font-weight:700;
+    font-size:20px;
+    font-weight:600;
     color:var(--text);
-    letter-spacing:-0.3px;
+    letter-spacing:-0.5px;
     position:relative;
   }
   .review-food-meta{
@@ -1323,10 +1363,10 @@
 
   .review-block{margin-top:28px}
   .review-q-title{
-    font-size:14px;
-    font-weight:700;
+    font-size:17px;
+    font-weight:600;
     color:var(--text);
-    letter-spacing:-0.3px;
+    letter-spacing:-0.4px;
     margin-bottom:14px;
   }
 
@@ -1406,8 +1446,8 @@
     width:100%;
     padding:20px;
     border-radius:22px;
-    font-size:15px;
-    font-weight:700;
+    font-size:17px;
+    font-weight:600;
     cursor:pointer;
     letter-spacing:-0.3px;
     box-shadow:0 16px 36px rgba(255,255,82,0.25);
@@ -1458,24 +1498,34 @@
     border:1.5px dashed rgba(255,255,82,0.32);
     position:relative;
     overflow:hidden;
+    transition:border-color 0.3s, background 0.3s;
   }
   .review-complete-image-slot::before{
     content:'';
     position:absolute;
     inset:0;
     background:radial-gradient(circle at center, var(--yellow-dim) 0%, transparent 70%);
+    transition:opacity 0.3s;
   }
   .review-complete-image-slot img{
+    position:absolute;
+    inset:0;
     width:100%;height:100%;
     object-fit:cover;
     display:block;
-    position:relative;
+    border-radius:inherit;
   }
+  .review-complete-image-slot.has-image{
+    border-style:solid;
+    border-color:transparent;
+    background:transparent;
+  }
+  .review-complete-image-slot.has-image::before{opacity:0}
   .review-complete-title{
-    font-size:18px;
+    font-size:20px;
     font-weight:600;
     color:var(--text);
-    letter-spacing:-0.4px;
+    letter-spacing:-0.5px;
     line-height:1.4;
   }
   .review-complete-sub{
@@ -1494,8 +1544,8 @@
     width:100%;
     padding:18px;
     border-radius:18px;
-    font-size:15px;
-    font-weight:700;
+    font-size:17px;
+    font-weight:600;
     cursor:pointer;
     letter-spacing:-0.3px;
     box-shadow:0 14px 32px rgba(255,255,82,0.25);
@@ -1723,9 +1773,14 @@
 
           <!-- Collection request hero -->
           <div class="collect-hero">
-            <div class="collect-emoji">🍵</div>
+            <div class="collect-icon" aria-label="collection icon">
+              <img src="assets/collection-icon.png" alt=""
+                   onload="this.parentElement.classList.add('has-image')"
+                   onerror="this.style.display='none'">
+              <span class="collect-icon-fallback">🍵</span>
+            </div>
             <div class="collect-title">식사를 마치셨으면<br>MOTI가 수거해드려요</div>
-            <div class="collect-sub">수거 요청 버튼 클릭 시,<br>배달 받은 위치로 MOTI 이동합니다.</div>
+            <div class="collect-sub">수거 요청 버튼 클릭 시,<br>배달 받은 위치로 MOTI 이동합니다</div>
 
             <div class="collect-time">
               <div>
@@ -1762,8 +1817,10 @@
 
           <!-- Food card -->
           <div class="review-food-card">
-            <div class="review-food-image" aria-label="food image placeholder">
-              <!-- Image goes here later -->
+            <div class="review-food-image" aria-label="food image">
+              <img src="assets/menu-image.png" alt=""
+                   onload="this.parentElement.classList.add('has-image')"
+                   onerror="this.style.display='none'">
             </div>
             <div class="review-food-name">엄마의 오리 훈제 정식</div>
             <div class="review-food-meta">오늘 전해드린 따뜻한 한 끼</div>
@@ -1826,8 +1883,10 @@
     <!-- Review Complete Modal -->
     <div class="review-complete-overlay" id="review-complete-modal">
       <div class="review-complete-card">
-        <div class="review-complete-image-slot" aria-label="heart image placeholder">
-          <!-- Image goes here later -->
+        <div class="review-complete-image-slot" aria-label="heart image">
+          <img src="assets/heart-icon.png" alt=""
+               onload="this.parentElement.classList.add('has-image')"
+               onerror="this.style.display='none'">
         </div>
         <div class="review-complete-title">고마워요, 오늘도 수고 많으셨어요</div>
         <div class="review-complete-sub">남겨주신 마음은 다음 식사의 따뜻함이 됩니다</div>
