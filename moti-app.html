@@ -454,7 +454,7 @@
   }
   .page-title{
     font-size:20px;
-    font-weight:800;
+    font-weight:600;
     color:var(--text);
     letter-spacing:-0.5px;
   }
@@ -470,7 +470,7 @@
     padding:7px 12px;
     border-radius:100px;
     font-size:10px;
-    font-weight:800;
+    font-weight:600;
     letter-spacing:0.4px;
     border:1px solid rgba(255,255,82,0.2);
     white-space:nowrap;
@@ -641,7 +641,7 @@
     font-weight:800;letter-spacing:0.8px;
   }
   .map-foot-value{
-    font-size:14px;font-weight:800;color:var(--text);
+    font-size:14px;font-weight:600;color:var(--text);
     letter-spacing:-0.3px;
   }
   .map-foot-value b{color:var(--yellow)}
@@ -680,34 +680,42 @@
     min-width:0;
   }
   .status-image-slot{
-    width:96px;
-    height:96px;
-    border-radius:22px;
+    width:80px;
+    height:80px;
+    border-radius:20px;
     background:rgba(0,0,0,0.28);
     border:1.5px dashed rgba(255,255,82,0.28);
     flex-shrink:0;
     position:relative;
     overflow:hidden;
+    transition:border-color 0.3s, background 0.3s;
   }
   .status-image-slot img{
     width:100%;height:100%;
     object-fit:cover;
     display:block;
+    border-radius:inherit;
+  }
+  .status-image-slot.has-image{
+    border-style:solid;
+    border-color:rgba(255,255,82,0.18);
+    background:transparent;
   }
   .status-eyebrow{
-    font-size:10px;
-    font-weight:800;
+    font-size:15px;
+    font-weight:600;
     color:var(--yellow);
-    letter-spacing:2px;
+    letter-spacing:0.4px;
+    white-space:nowrap;
+    line-height:1.2;
   }
   .status-main{
-    font-size:22px;
+    font-size:20px;
     font-weight:600;
     color:var(--text);
-    margin-top:10px;
-    line-height:1.3;
-    letter-spacing:-0.5px;
-    max-width:220px;
+    margin-top:8px;
+    line-height:1.35;
+    letter-spacing:-0.4px;
     position:relative;
   }
   .status-eta{
@@ -718,7 +726,7 @@
     border-radius:100px;
     display:inline-block;
     font-size:12px;
-    font-weight:700;
+    font-weight:600;
     color:var(--yellow);
     border:1px solid rgba(255,255,82,0.25);
   }
@@ -733,7 +741,7 @@
   }
   .section-title{
     font-size:13px;
-    font-weight:800;
+    font-weight:600;
     color:var(--text);
     letter-spacing:-0.3px;
     display:flex;
@@ -746,16 +754,17 @@
     padding:5px 10px;
     border-radius:100px;
     font-size:9px;
-    font-weight:900;
+    font-weight:600;
     display:flex;
     align-items:center;
     gap:5px;
     letter-spacing:0.5px;
   }
   .live-dot{
-    width:5px;height:5px;
-    background:#111;
+    width:6px;height:6px;
+    background:#22C55E;
     border-radius:50%;
+    box-shadow:0 0 6px rgba(34,197,94,0.8);
     animation:pulse 1.4s infinite;
   }
   @keyframes pulse{
@@ -848,17 +857,24 @@
     border:1.5px dashed var(--line);
     position:relative;
     overflow:hidden;
+    transition:border-color 0.3s, background 0.3s;
   }
   .info-card-slot img{
     width:100%;height:100%;
     object-fit:cover;
     display:block;
+    border-radius:inherit;
+  }
+  .info-card-slot.has-image{
+    border-style:solid;
+    border-color:transparent;
+    background:transparent;
   }
   .info-card-label{
     font-size:10px;
     color:var(--text-3);
     margin-top:12px;
-    font-weight:800;
+    font-weight:600;
     letter-spacing:0.5px;
   }
   .info-card-value{
@@ -1057,8 +1073,8 @@
     width:100%;
     padding:18px;
     border-radius:18px;
-    font-size:15px;
-    font-weight:700;
+    font-size:17px;
+    font-weight:600;
     cursor:pointer;
     letter-spacing:-0.3px;
     box-shadow:0 14px 32px rgba(255,255,82,0.25);
@@ -1567,8 +1583,7 @@
         <div class="page-content">
           <div class="delivery-header">
             <div>
-              <div class="page-title">배달 중이에요</div>
-              <div class="page-sub">엄마의 오리 훈제 정식</div>
+              <div class="page-title">배달 중</div>
             </div>
             <div class="order-code-pill">MOTI · 9 DJ AI 12 E 007</div>
           </div>
@@ -1577,11 +1592,13 @@
           <div class="status-banner" id="status-banner">
             <div class="status-text-wrap">
               <div class="status-eyebrow">DELIVERY IN PROGRESS</div>
-              <div class="status-main" id="status-main">엘리베이터에<br>탑승했어요</div>
+              <div class="status-main" id="status-main">엘리베이터에 탑승했어요</div>
               <div class="status-eta" id="status-eta">⏱ 약 4분 뒤 도착</div>
             </div>
-            <div class="status-image-slot" aria-label="status image placeholder">
-              <!-- Image goes here later -->
+            <div class="status-image-slot" aria-label="status image">
+              <img src="assets/status-image.png" alt=""
+                   onload="this.parentElement.classList.add('has-image')"
+                   onerror="this.style.display='none'">
             </div>
           </div>
 
@@ -1670,7 +1687,11 @@
           <!-- 4) Info row: Temperature & Time -->
           <div class="status-row">
             <div class="info-card">
-              <div class="info-card-slot" aria-label="temperature icon placeholder"></div>
+              <div class="info-card-slot" aria-label="temperature icon">
+                <img src="assets/temp-icon.png" alt=""
+                     onload="this.parentElement.classList.add('has-image')"
+                     onerror="this.style.display='none'">
+              </div>
               <div class="info-card-label">음식 온도 (보온 활성화)</div>
               <div class="info-card-value">65<span class="info-card-unit">°C</span></div>
               <div class="temp-bar"><div class="temp-bar-fill"></div></div>
@@ -1822,7 +1843,7 @@
           <!-- Image goes here later -->
         </div>
         <div class="arrival-modal-title">방금 문 앞에 놓고 갑니다</div>
-        <div class="arrival-modal-sub">노크는 조용히, 따뜻함은 그대로<br>전달해 두었어요.</div>
+        <div class="arrival-modal-sub">노크는 조용히, 따뜻함은 그대로 전달해 두었어요</div>
         <button class="arrival-modal-btn" onclick="goToCollect()">받으러 가기</button>
       </div>
     </div>
